@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: agentuser
+      POSTGRES_PASSWORD: agentpass
+      POSTGRES_DB: agent_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agent-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://agentuser:agentpass@postgres:5432/agent_db
+      JWT_SECRET: dev-secret-key
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+    networks:
+      - agent-network
+    command: npm run dev:backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:3000
+      VITE_WS_URL: ws://localhost:3000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./shared:/app/shared
+    networks:
+      - agent-network
+    command: npm run dev:frontend
+
+volumes:
+  postgres_data:
+
+networks:
+  agent-network:
+    driver: bridge

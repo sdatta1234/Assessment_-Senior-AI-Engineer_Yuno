@@ -1,5 +1,3 @@
-# Assessment_-Senior-AI-Engineer_Yuno
-Challenge for Assessment Round - Senior AI Engineer in Yuno
 # AI Agent Orchestration Platform
 
 A comprehensive platform for creating, configuring, and orchestrating AI agents with real-time monitoring, workflow builder, and external messaging integration.
@@ -276,4 +274,3 @@ Contributions welcome! Please read [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for
 ## 📞 Support
 
 For issues and questions, please use the GitHub issue tracker or contact the development team.
-
